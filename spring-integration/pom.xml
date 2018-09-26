@@ -8,7 +8,7 @@
 		<version>1.0.0</version>
 	</parent>
 
-	<artifactId>spring-integration-tutorial</artifactId>
+	<artifactId>spring-integration</artifactId>
 
 	<name>Spring Integration Tutorial</name>
 	<description>Spring Integration Tutorial</description>

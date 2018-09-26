@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>spring-tutorials</artifactId>
+    <groupId>com.luigimoro.spring.tutorial</groupId>
+    <version>1.0.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>war</packaging>
+
+  <artifactId>spring-security</artifactId>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-webmvc</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tomcat</groupId>
+      <artifactId>tomcat-servlet-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+
+    <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-api -->
+
+
+  </dependencies>
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>io.fabric8</groupId>
+        <artifactId>docker-maven-plugin</artifactId>
+        <version>0.26.0</version>
+
+        <configuration>
+
+          <images>
+            <image>
+              <name>security</name>
+                <build>
+                  <dockerFileDir>../../../Docker</dockerFileDir>
+                </build>
+            </image>
+          </images>
+          <execution>
+            <phase>package</phase>
+            <goal>build</goal>
+          </execution>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>

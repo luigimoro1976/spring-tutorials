@@ -1,0 +1,25 @@
+<beans:beans
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.springframework.org/schema/integration"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+    <channel id="names"/>
+
+    <gateway id="helloGateway" default-request-channel="names" service-interface="com.luigimoro.spring.tutorial.integration.gateway.HelloService"/>
+
+    <gateway id="helloGateway2" default-request-channel="names2" service-interface="com.luigimoro.spring.tutorial.integration.gateway.HelloService"/>
+
+    <service-activator input-channel="names" ref="helloService"
+                       method="sayHello"/>
+
+    <service-activator input-channel="names2" ref="helloService2"
+                       method="sayHello"/>
+
+    <beans:bean id="helloService"
+                class="com.luigimoro.spring.tutorial.integration.gateway.MyHelloService"/>
+
+    <beans:bean id="helloService2"
+                class="com.luigimoro.spring.tutorial.integration.gateway.MyHelloService2"/>
+</beans:beans>

@@ -4,54 +4,46 @@ import com.luigimoro.spring.tutorial.cache.configuration.AppConfig;
 import com.luigimoro.spring.tutorial.cache.dao.model.CustomerModel;
 import com.luigimoro.spring.tutorial.cache.dao.repository.CustomerRepository;
 import com.luigimoro.spring.tutorial.cache.dto.CustomerInfo;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import redis.embedded.RedisServer;
 
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppConfig.class, CustomerServiceTest.TestConfig.class})
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {AppConfig.class})
 public class CustomerServiceTest {
-
 
     private static final String CUSTOMER_ID = "1234567";
 
-    @Configuration
-    static class TestConfig {
-
-        @Bean
-        CustomerRepository customerRepository() {
-            return mock(CustomerRepository.class);
-        }
-    }
-
     @Autowired
+    @InjectMocks
     CustomerService customerService;
 
-    @Autowired
+    @Mock
     CustomerRepository customerRepository;
 
     private static RedisServer server = null;
 
-
-    @Before
+    @BeforeEach
     public void setup() throws IOException {
+        MockitoAnnotations.initMocks(this);
         server = new RedisServer();
         server.start();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         server.stop();
     }

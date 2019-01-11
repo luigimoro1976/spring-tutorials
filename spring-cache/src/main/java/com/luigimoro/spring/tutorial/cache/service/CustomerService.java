@@ -22,6 +22,8 @@ public class CustomerService {
     @Cacheable(value = "customerBaseCache")
     public CustomerInfo getCustomerInfo(String customerId) {
 
+        System.out.println("Invoking getCustomerInfo method");
+
         CustomerModel customerModel = customerRepository.findCustomerModelByCustomerId(customerId);
 
         return BeanMapper.MAPPER.mapCustomerInfo(customerModel);

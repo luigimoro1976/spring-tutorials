@@ -9,29 +9,24 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @EnableCaching
 @Configuration
-@ComponentScan("com.luigimoro.spring.tutorial.cache")
+@ComponentScan(basePackages = {"com.luigimoro.spring.tutorial.cache"})
 public class AppConfig {
+
+    public AppConfig() {
+        System.out.println("Initializing app config...");
+    }
 
     @Bean
     public LettuceConnectionFactory redisConnectionFactory() {
 
         return new LettuceConnectionFactory(new RedisStandaloneConfiguration());
     }
-
-//    @Bean
-//    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory cf) {
-//        RedisTemplate<String, String> redisTemplate = new RedisTemplate<>();
-//        redisTemplate.setConnectionFactory(cf);
-//        return redisTemplate;
-//    }
-
 
     @Bean
     public RedisCacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {

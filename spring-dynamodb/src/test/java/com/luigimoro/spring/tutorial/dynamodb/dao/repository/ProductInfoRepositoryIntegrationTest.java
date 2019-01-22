@@ -2,13 +2,12 @@ package com.luigimoro.spring.tutorial.dynamodb.dao.repository;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
+import com.amazonaws.services.dynamodbv2.local.main.ServerRunner;
+import com.amazonaws.services.dynamodbv2.local.server.DynamoDBProxyServer;
 import com.amazonaws.services.dynamodbv2.model.CreateTableRequest;
-import com.amazonaws.services.dynamodbv2.model.DeleteTableRequest;
 import com.amazonaws.services.dynamodbv2.model.ProvisionedThroughput;
-import com.amazonaws.services.dynamodbv2.model.ResourceNotFoundException;
-import com.luigimoro.spring.tutorial.dynamodb.configuration.AppConfig;
-import com.luigimoro.spring.tutorial.dynamodb.configuration.DynamoDBConfig;
 import com.luigimoro.spring.tutorial.dynamodb.dao.entity.ProductInfo;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +20,7 @@ import java.util.List;
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = {AppConfig.class, DynamoDBConfig.class})
+@ContextConfiguration(locations = {"classpath:spring/application-context.xml"})
 public class ProductInfoRepositoryIntegrationTest {
 
     private DynamoDBMapper dynamoDBMapper;
@@ -35,39 +34,64 @@ public class ProductInfoRepositoryIntegrationTest {
     private static final String EXPECTED_COST = "20";
     private static final String EXPECTED_PRICE = "50";
 
+    private DynamoDBProxyServer server;
+
     @BeforeEach
     public void setup() throws Exception {
+
         dynamoDBMapper = new DynamoDBMapper(amazonDynamoDB);
 
-        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(ProductInfo.class);
-        DeleteTableRequest deleteTableRequest = dynamoDBMapper.generateDeleteTableRequest(ProductInfo.class);
-
-        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
-
-        System.out.println("Deleting pre-existing table");
         try {
-            amazonDynamoDB.deleteTable(deleteTableRequest);
-        } catch (ResourceNotFoundException ex) {
-            System.out.println("No table to delete.");
-        }
-        System.out.println("Creating table");
-        amazonDynamoDB.createTable(tableRequest);
 
-        dynamoDBMapper.batchDelete((List<ProductInfo>) repository.findAll());
+            System.setProperty("sqlite4java.library.path", "target/native-libs");
+            System.out.println("OK");
+            final String port = "8000";
+            this.server = ServerRunner.createServerFromCommandLineArgs(new String[]{"-inMemory", "-port", port});
+            try {
+                server.stop();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            server.start();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @AfterEach
+    public void teardown() throws Exception {
+        if (server == null) {
+            return;
+        }
+        try {
+            System.out.println("Trying to shutdown the server");
+            server.stop();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Test
-    public void sampleTestCase() {
+    public void testSampleTestCase() {
+
+        System.out.println("Begin");
+        CreateTableRequest tableRequest = dynamoDBMapper.generateCreateTableRequest(ProductInfo.class);
+
+        tableRequest.setProvisionedThroughput(new ProvisionedThroughput(1L, 1L));
+        amazonDynamoDB.createTable(tableRequest);
+        System.out.println("Table created");
         ProductInfo dave = new ProductInfo(EXPECTED_COST, EXPECTED_PRICE);
         repository.save(dave);
-
-        System.out.println(dave.getId());
-
         System.out.println("Data saved");
+
         List<ProductInfo> result = (List<ProductInfo>) repository.findAll();
 
         assertTrue("No record found", result.size() > 0);
         assertTrue("Contains item with expected cost",
                 result.get(0).getCost().equals(EXPECTED_COST));
+
     }
 }

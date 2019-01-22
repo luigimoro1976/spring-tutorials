@@ -12,7 +12,10 @@
 
   <properties>
     <jdk.version>1.8</jdk.version>
+    
     <spring.version>5.1.4.RELEASE</spring.version>
+    <spring.security.version>5.1.2.RELEASE</spring.security.version>
+    <spring.integration.version>5.1.2.RELEASE</spring.integration.version>
     <spring.web.ws.version>3.0.4.RELEASE</spring.web.ws.version>
     <aspectj.version>1.9.1</aspectj.version>
     <mapstruct.version>1.2.0.Final</mapstruct.version>
@@ -31,9 +34,18 @@
     <embedded.redis.version>0.6</embedded.redis.version>
     <logback.classic.version>1.2.3</logback.classic.version>
     <commons.lang3.version>3.8.1</commons.lang3.version>
-    <spring-data-releasetrain>Hopper-RELEASE</spring-data-releasetrain>
     <spring.data.commons>2.1.3.RELEASE</spring.data.commons>
+    <aws.dynamodblocal.version>1.11.119</aws.dynamodblocal.version>
   </properties>
+
+  <!--Custom repository:-->
+  <repositories>
+    <repository>
+      <id>dynamodb-local-oregon</id>
+      <name>DynamoDB Local Release Repository</name>
+      <url>https://s3-us-west-2.amazonaws.com/dynamodb-local/release</url>
+    </repository>
+  </repositories>
 
   <dependencyManagement>
     <dependencies>
@@ -56,7 +68,7 @@
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-core</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.security.version}</version>
       </dependency>
 
       <dependency>
@@ -74,7 +86,7 @@
       <dependency>
         <groupId>org.springframework.integration</groupId>
         <artifactId>spring-integration-core</artifactId>
-        <version>${spring.version}</version>
+        <version>${spring.integration.version}</version>
       </dependency>
 
       <!-- https://mvnrepository.com/artifact/org.springframework.ws/spring-ws-core -->
@@ -209,17 +221,15 @@
       </dependency>
 
       <dependency>
-        <groupId>org.springframework.data</groupId>
-        <artifactId>spring-data-releasetrain</artifactId>
-        <version>${spring-data-releasetrain}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-dynamodb</artifactId>
+        <version>${aws.java.sdk.dynamodb.version}</version>
       </dependency>
 
       <dependency>
         <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-dynamodb</artifactId>
-        <version>${aws.java.sdk.dynamodb.version}</version>
+        <artifactId>DynamoDBLocal</artifactId>
+        <version>${aws.dynamodblocal.version}</version>
       </dependency>
 
       <dependency>
@@ -233,6 +243,48 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons.lang3.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.almworks.sqlite4java</groupId>
+        <artifactId>sqlite4java</artifactId>
+        <version>1.0.392</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.almworks.sqlite4java</groupId>
+        <artifactId>sqlite4java-win32-x86</artifactId>
+        <version>1.0.392</version>
+        <type>dll</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.almworks.sqlite4java</groupId>
+        <artifactId>sqlite4java-win32-x64</artifactId>
+        <version>1.0.392</version>
+        <type>dll</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.almworks.sqlite4java</groupId>
+        <artifactId>libsqlite4java-osx</artifactId>
+        <version>1.0.392</version>
+        <type>dylib</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.almworks.sqlite4java</groupId>
+        <artifactId>libsqlite4java-linux-i386</artifactId>
+        <version>1.0.392</version>
+        <type>so</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.almworks.sqlite4java</groupId>
+        <artifactId>libsqlite4java-linux-amd64</artifactId>
+        <version>1.0.392</version>
+        <type>so</type>
+        <scope>test</scope>
       </dependency>
 
     </dependencies>
@@ -252,10 +304,23 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
         <configuration>
           <source>${jdk.version}</source>
           <target>${jdk.version}</target>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.19.1</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.0.1</version>
+          </dependency>
+        </dependencies>
       </plugin>
     </plugins>
   </build>

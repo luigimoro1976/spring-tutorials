@@ -3,12 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:dynamodb="http://docs.socialsignin.org/schema/data/dynamodb"
        xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-                           http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context.xsd
-                           http://docs.socialsignin.org/schema/data/dynamodb
-                           http://derjust.github.io/spring-data-dynamodb/spring-dynamodb-1.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                           http://docs.socialsignin.org/schema/data/dynamodb http://docs.socialsignin.org/schema/data/dynamodb/spring-dynamodb-1.0.xsd">
 
   <context:component-scan base-package="com.luigimoro.spring.tutorial.dynamodb"/>
 
@@ -18,7 +15,7 @@
     </property>
   </bean>
 
-    <bean id="amazonAWSCredentials" class="com.amazonaws.auth.BasicAWSCredentials">
+  <bean id="amazonAWSCredentials" class="com.amazonaws.auth.BasicAWSCredentials">
     <constructor-arg value="${amazon.aws.accesskey}"/>
     <constructor-arg value="${amazon.aws.secretkey}"/>
   </bean>
@@ -35,6 +32,6 @@
   <bean id="dynamoDBMapperConfig" factory-bean="dynamoConfigBuilder" factory-method="build"/>
 
   <dynamodb:repositories base-package="com.luigimoro.spring.tutorial.dynamodb.dao.repository"
-                         dynamodb-mapper-config-ref="dynamoDBMapperConfig" />
+                         dynamodb-mapper-config-ref="dynamoDBMapperConfig"/>
 
 </beans>

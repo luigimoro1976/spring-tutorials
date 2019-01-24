@@ -34,7 +34,7 @@
     <embedded.redis.version>0.6</embedded.redis.version>
     <logback.classic.version>1.2.3</logback.classic.version>
     <commons.lang3.version>3.8.1</commons.lang3.version>
-    <spring.data.commons>2.1.3.RELEASE</spring.data.commons>
+    <spring.data.commons.version>2.0.9.RELEASE</spring.data.commons.version>
     <aws.dynamodblocal.version>1.11.119</aws.dynamodblocal.version>
   </properties>
 
@@ -100,7 +100,7 @@
       <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-commons</artifactId>
-        <version>${spring.data.commons}</version>
+        <version>${spring.data.commons.version}</version>
       </dependency>
 
 

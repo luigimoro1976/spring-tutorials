@@ -8,6 +8,7 @@ import org.socialsignin.spring.data.dynamodb.repository.config.EnableDynamoDBRep
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.repository.query.QueryLookupStrategy;
 
 @Configuration
 @EnableDynamoDBRepositories

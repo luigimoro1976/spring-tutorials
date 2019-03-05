@@ -16,7 +16,6 @@ public class SmartphoneId implements Serializable {
 
 
     @DynamoDBHashKey(attributeName = "brand")
-    @DynamoDBIndexHashKey(globalSecondaryIndexName = "index_base_1")
     public String getBrand() {
         return brand;
     }
@@ -25,7 +24,7 @@ public class SmartphoneId implements Serializable {
         this.brand = brand;
     }
 
-    @DynamoDBRangeKey(attributeName = "model")
+
     public String getModel() {
         return model;
     }
